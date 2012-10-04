@@ -1,13 +1,19 @@
-{ 
-  name: 'Chai Changes',
-  desc: 'Extend Chai with assertions expected changes of results.',
-  url: 'chai-changes',
-  link: 'https://github.com/matthijsgroen/chai-changes',
-  tags: [ 'changes', 'when' ],
-  pkg: 'https://raw.github.com/matthijsgroen/chai-changes/master/package.json',
-  markdown: 'https://raw.github.com/matthijsgroen/chai-changes/master/README.md',
-  node: false,
-  browser: {
-    'chai-changes.js': 'https://raw.github.com/matthijsgroen/chai-changes/master/chai-changes.js'
+{
+  "author": "Matthijs Groen <matthijs.groen@gmail.com>",
+  "name": "chai-changes",
+  "description": "Change assertions for the Chai assertion library",
+  "keywords": [ "test", "assertion", "assert", "testing", "changes" ],
+  "version": "0.8.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/matthijsgroen/chai-changes"
+  },
+  "bugs": {
+    "url": "https://github.com/matthijsgroen/chai-changes/issues"
+  },
+  "main": "./chai-changes",
+  "devDependencies": {
+    "chai": ">= 1.0.0",
+    "mocha": ">= 1.0.0"
   }
 }
