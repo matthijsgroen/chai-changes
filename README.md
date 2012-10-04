@@ -16,7 +16,7 @@ Use the assertions with chai's `expect` or `should` assertions.
 Assertions
 ----------
 
-All assertions use a `when` mechanism. 
+All assertions use a `when` mechanism.
 
 
 Using 'expect':
@@ -71,4 +71,8 @@ compared using a deep equal.
     (-> result).should.change.to(['a', 'b', 'c']).when -> result.push('c')
     (-> result).should.change.from(['a', 'b']).to(['a', 'c']).when -> result = ['a', 'c']
 
+## License
 
+Copyright (c) 2012 Matthijs Groen
+
+MIT License (see the LICENSE file)
