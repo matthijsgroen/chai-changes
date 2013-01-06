@@ -2,8 +2,8 @@
   "author": "Matthijs Groen <matthijs.groen@gmail.com>",
   "name": "chai-changes",
   "description": "Change assertions for the Chai assertion library",
-  "keywords": [ "test", "assertion", "assert", "testing", "changes" ],
-  "version": "0.8.0",
+  "keywords": [ "test", "assertion", "assert", "testing", "changes", "promises" ],
+  "version": "0.8.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/matthijsgroen/chai-changes"
