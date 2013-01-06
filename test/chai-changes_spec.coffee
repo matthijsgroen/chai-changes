@@ -3,6 +3,19 @@ expect = chai.expect
 
 describe 'Chai-Changes', ->
 
+  describe 'when', ->
+
+    it 'checks conditions after callback execution', ->
+      result = 1
+      expect(-> result).to.change.when -> result += 1
+
+    it 'checks conditions after promise fulfilled', (done) ->
+      result = 1
+      def = window.when.defer()
+      expect(-> result).to.change.when(def.promise, notify: done)
+      result += 1
+      def.resolve()
+
   describe 'change', ->
 
     describe 'at all', ->

@@ -7,6 +7,29 @@
   expect = chai.expect;
 
   describe('Chai-Changes', function() {
+    describe('when', function() {
+      it('checks conditions after callback execution', function() {
+        var result;
+        result = 1;
+        return expect(function() {
+          return result;
+        }).to.change.when(function() {
+          return result += 1;
+        });
+      });
+      return it('checks conditions after promise fulfilled', function(done) {
+        var def, result;
+        result = 1;
+        def = window.when.defer();
+        expect(function() {
+          return result;
+        }).to.change.when(def.promise, {
+          notify: done
+        });
+        result += 1;
+        return def.resolve();
+      });
+    });
     return describe('change', function() {
       describe('at all', function() {
         it('detects changes', function() {

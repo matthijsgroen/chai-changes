@@ -21,8 +21,12 @@
       #
     */
 
-    chai.Assertion.addMethod('when', function(val) {
-      var action, definedActions, _i, _j, _len, _len1, _results;
+    chai.Assertion.addMethod('when', function(val, options) {
+      var action, definedActions, done, _i, _j, _len, _len1, _results,
+        _this = this;
+      if (options == null) {
+        options = {};
+      }
       definedActions = flag(this, 'whenActions') || [];
       for (_i = 0, _len = definedActions.length; _i < _len; _i++) {
         action = definedActions[_i];
@@ -30,13 +34,36 @@
           action.before(this);
         }
       }
-      val();
-      _results = [];
-      for (_j = 0, _len1 = definedActions.length; _j < _len1; _j++) {
-        action = definedActions[_j];
-        _results.push(typeof action.after === "function" ? action.after(this) : void 0);
+      if (val.then != null) {
+        done = options != null ? options.notify : void 0;
+        if (done == null) {
+          done = function() {};
+        }
+        return val.then(function() {
+          var _j, _len1;
+          try {
+            for (_j = 0, _len1 = definedActions.length; _j < _len1; _j++) {
+              action = definedActions[_j];
+              if (typeof action.after === "function") {
+                action.after(_this);
+              }
+            }
+            return done();
+          } catch (error) {
+            return done(error);
+          }
+        });
+      } else {
+        if (typeof val === "function") {
+          val();
+        }
+        _results = [];
+        for (_j = 0, _len1 = definedActions.length; _j < _len1; _j++) {
+          action = definedActions[_j];
+          _results.push(typeof action.after === "function" ? action.after(this) : void 0);
+        }
+        return _results;
       }
-      return _results;
     });
     noChangeAssert = function(context) {
       var endValue, negate, object, relevant, result, startValue;

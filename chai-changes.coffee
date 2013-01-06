@@ -20,12 +20,24 @@
   #
   ###
 
-  chai.Assertion.addMethod 'when', (val) ->
+  chai.Assertion.addMethod 'when', (val, options = {}) ->
     definedActions = flag(this, 'whenActions') || []
 
     action.before?(this) for action in definedActions
-    val() # execute the 'when'
-    action.after?(this) for action in definedActions
+    # execute the 'when'
+    if val.then?
+      done = options?.notify
+      done ?= ->
+      # promise
+      val.then =>
+        try
+          action.after?(this) for action in definedActions
+          done()
+        catch error
+          done error
+    else
+      val?()
+      action.after?(this) for action in definedActions
 
   noChangeAssert = (context) ->
     relevant = flag(context, 'no-change')
