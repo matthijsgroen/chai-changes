@@ -12,8 +12,21 @@ describe 'Chai-Changes', ->
     it 'checks conditions after promise fulfilled', (done) ->
       result = 1
       def = window.when.defer()
-      expect(-> result).to.change.when(def.promise, notify: done)
+      expect(-> result).to.change.when((-> def.promise), notify: done)
       result += 1
+      def.resolve()
+
+    it 'returns error to notify when conditions after promise fail', (done) ->
+      callCheck = (arg) ->
+        try
+          arg.should.eql new Error 'expected `result;` to change, but it stayed 1'
+          done()
+        catch error
+          done new Error error
+
+      result = 1
+      def = window.when.defer()
+      expect(-> result).to.change.when((-> def.promise), notify: callCheck)
       def.resolve()
 
   describe 'change', ->

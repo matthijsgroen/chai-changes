@@ -25,18 +25,18 @@
 
     action.before?(this) for action in definedActions
     # execute the 'when'
-    if val.then?
+    result = val()
+    if result.then?
       done = options?.notify
       done ?= ->
       # promise
-      val.then =>
+      result.then =>
         try
           action.after?(this) for action in definedActions
           done()
         catch error
-          done error
+          done new Error error
     else
-      val?()
       action.after?(this) for action in definedActions
 
   noChangeAssert = (context) ->

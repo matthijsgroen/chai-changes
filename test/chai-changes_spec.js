@@ -17,16 +17,39 @@
           return result += 1;
         });
       });
-      return it('checks conditions after promise fulfilled', function(done) {
+      it('checks conditions after promise fulfilled', function(done) {
         var def, result;
         result = 1;
         def = window.when.defer();
         expect(function() {
           return result;
-        }).to.change.when(def.promise, {
+        }).to.change.when((function() {
+          return def.promise;
+        }), {
           notify: done
         });
         result += 1;
+        return def.resolve();
+      });
+      return it('returns error to notify when conditions after promise fail', function(done) {
+        var callCheck, def, result;
+        callCheck = function(arg) {
+          try {
+            arg.should.eql(new Error('expected `result;` to change, but it stayed 1'));
+            return done();
+          } catch (error) {
+            return done(new Error(error));
+          }
+        };
+        result = 1;
+        def = window.when.defer();
+        expect(function() {
+          return result;
+        }).to.change.when((function() {
+          return def.promise;
+        }), {
+          notify: callCheck
+        });
         return def.resolve();
       });
     });
