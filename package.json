@@ -15,5 +15,14 @@
   "devDependencies": {
     "chai": ">= 1.0.0",
     "mocha": ">= 1.0.0"
-  }
+  },
+  "scripts": {
+    "test": "./test.sh"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/matthijsgroen/chai-changes/blob/master/LICENSE"
+    }
+  ]
 }

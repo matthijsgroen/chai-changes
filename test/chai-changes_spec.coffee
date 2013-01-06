@@ -1,4 +1,5 @@
-#= require ./../chai-changes
+should = chai.should()
+expect = chai.expect
 
 describe 'Chai-Changes', ->
 
