@@ -11,7 +11,7 @@ describe 'Chai-Changes', ->
 
     it 'changes the object in the assert chain to the callback result', ->
       result = 1
-      expect(-> result).not.to.change.when(->).and.not.be.defined
+      expect(-> result).not.to.change.when(-> 'hello').and.equal 'hello'
 
     describe 'with promises', ->
 
@@ -25,21 +25,15 @@ describe 'Chai-Changes', ->
       it 'checks conditions after promise is rejected', (done) ->
         result = 1
         def = window.when.defer()
-        expect(-> result).to.change.when((-> def.promise), notify: done)
+        expect(-> result).to.change.when(-> def.promise).and.notify(done)
         result += 1
         def.reject()
 
-      it 'returns error to notify when conditions after promise fail', (done) ->
-        callCheck = (arg) ->
-          try
-            arg.should.eql new Error 'expected `result;` to change, but it stayed 1'
-            done()
-          catch error
-            done new Error error
-
+      it 'returns a promise about the expectations', (done) ->
         result = 1
         def = window.when.defer()
-        expect(-> result).to.change.when((-> def.promise), notify: callCheck)
+        expect(-> result).to.change.when(-> def.promise).be.broken.with('expected `result;` to change, but it stayed 1').notify(done)
+
         def.resolve()
 
   describe 'change', ->

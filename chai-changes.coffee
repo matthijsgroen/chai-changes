@@ -28,7 +28,6 @@
     action.before?(this) for action in definedActions
     # execute the 'when'
     result = val()
-    flag(this, 'object', result)
 
     if result?.then?
       done = options?.notify
@@ -41,9 +40,13 @@
         catch error
           done new Error error
           throw new Error error
-      result.then promiseCallback, promiseCallback
+      newPromise = result.then promiseCallback, promiseCallback
+      flag(this, 'object', newPromise)
     else
       action.after?(this) for action in definedActions
+      flag(this, 'object', result)
+    # reset negate state for future chaining
+    flag(this, 'negate', false)
     this
 
   noChangeAssert = (context) ->

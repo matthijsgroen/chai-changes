@@ -13,6 +13,7 @@
   },
   "main": "./chai-changes",
   "devDependencies": {
+    "chai-as-promised": ">= 3.2.3",
     "chai": ">= 1.0.0",
     "mocha": ">= 1.0.0"
   },
