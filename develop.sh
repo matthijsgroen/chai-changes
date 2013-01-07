@@ -1,5 +1,4 @@
 #!/bin/bash
-coffee -cw -o . . &
-cd test/ && coffee -cw -o . .
+coffee -c -o . . && coffee -c -o test/ test/
 
 

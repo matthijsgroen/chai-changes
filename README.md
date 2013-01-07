@@ -34,6 +34,23 @@ Same test using 'should':
     (-> codeThatYieldsAChangedResult).should....when ->
       executeTheCodeThatCausesTheChange()
 
+### when
+
+Executes the build up pre- and post-conditions. First it executes the
+pre-conditions, then it will execute the provided callback. And after
+the callback it will assert the post-conditions. It will change the
+object in the assertion chain to the result of the callback.
+
+When the callback returns a promise, the post-conditions are executed
+when the promise is fulfilled.
+
+Since the 'object' in the assertion chain is changed after the when, you
+can chain [chai-as-promised](https://github.com/domenic/chai-as-promised) matchers too, like:
+`(-> result).should.change.to(4).when(-> object.methodThatReturnsPromise()).and.notify(done)`
+
+This makes this mechanism also compatible with
+[mocha-as-promised](https://github.com/domenic/mocha-as-promised)
+
 ### `change`
 
 Assert if the 'expect/should' changes its outcome when 'when' is

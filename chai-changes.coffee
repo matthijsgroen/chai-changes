@@ -22,22 +22,29 @@
 
   chai.Assertion.addMethod 'when', (val, options = {}) ->
     definedActions = flag(this, 'whenActions') || []
+    object = flag(this, 'object')
+    flag(this, 'whenObject', object)
 
     action.before?(this) for action in definedActions
     # execute the 'when'
     result = val()
+    flag(this, 'object', result)
+
     if result.then?
       done = options?.notify
       done ?= ->
       # promise
-      result.then =>
+      promiseCallback = =>
         try
           action.after?(this) for action in definedActions
           done()
         catch error
           done new Error error
+          throw new Error error
+      result.then promiseCallback, promiseCallback
     else
       action.after?(this) for action in definedActions
+    this
 
   noChangeAssert = (context) ->
     relevant = flag(context, 'no-change')
@@ -45,7 +52,7 @@
 
     negate = flag(context, 'negate')
     flag(context, 'negate', @negate)
-    object = flag(context, 'object')
+    object = flag(context, 'whenObject')
 
     startValue = flag(context, 'changeStart')
     endValue = object()
@@ -59,7 +66,7 @@
   changeByAssert = (context) ->
     negate = flag(context, 'negate')
     flag(context, 'negate', @negate)
-    object = flag(context, 'object')
+    object = flag(context, 'whenObject')
 
     startValue = flag(context, 'changeStart')
     endValue = object()
@@ -73,7 +80,7 @@
   changeToBeginAssert = (context) ->
     negate = flag(context, 'negate')
     flag(context, 'negate', @negate)
-    object = flag(context, 'object')
+    object = flag(context, 'whenObject')
 
     startValue = object()
 
@@ -87,7 +94,7 @@
   changeToAssert = (context) ->
     negate = flag(context, 'negate')
     flag(context, 'negate', @negate)
-    object = flag(context, 'object')
+    object = flag(context, 'whenObject')
 
     endValue = object()
 
@@ -100,7 +107,7 @@
   changeFromBeginAssert = (context) ->
     negate = flag(context, 'negate')
     flag(context, 'negate', @negate)
-    object = flag(context, 'object')
+    object = flag(context, 'whenObject')
 
     startValue = object()
 
@@ -113,7 +120,7 @@
   changeFromAssert = (context) ->
     negate = flag(context, 'negate')
     flag(context, 'negate', @negate)
-    object = flag(context, 'object')
+    object = flag(context, 'whenObject')
 
     startValue = flag(context, 'changeStart')
     endValue = object()
@@ -140,7 +147,7 @@
 
       # set up the callback to trigger
       before: (context) ->
-        startValue = flag(context, 'object')()
+        startValue = flag(context, 'whenObject')()
         flag(context, 'changeStart', startValue)
       after: noChangeAssert
 

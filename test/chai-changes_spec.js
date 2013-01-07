@@ -17,40 +17,66 @@
           return result += 1;
         });
       });
-      it('checks conditions after promise fulfilled', function(done) {
-        var def, result;
+      it('changes the object in the assert chain to the callback result', function() {
+        var result;
         result = 1;
-        def = window.when.defer();
-        expect(function() {
+        return expect(function() {
           return result;
-        }).to.change.when((function() {
-          return def.promise;
-        }), {
-          notify: done
-        });
-        result += 1;
-        return def.resolve();
+        }).to.change.when(function() {
+          result += 1;
+          return 'hello';
+        }).and.equal('hello');
       });
-      return it('returns error to notify when conditions after promise fail', function(done) {
-        var callCheck, def, result;
-        callCheck = function(arg) {
-          try {
-            arg.should.eql(new Error('expected `result;` to change, but it stayed 1'));
-            return done();
-          } catch (error) {
-            return done(new Error(error));
-          }
-        };
-        result = 1;
-        def = window.when.defer();
-        expect(function() {
-          return result;
-        }).to.change.when((function() {
-          return def.promise;
-        }), {
-          notify: callCheck
+      return describe('with promises', function() {
+        it('checks conditions after promise resolved', function(done) {
+          var def, result;
+          result = 1;
+          def = window.when.defer();
+          expect(function() {
+            return result;
+          }).to.change.when((function() {
+            return def.promise;
+          }), {
+            notify: done
+          });
+          result += 1;
+          return def.resolve();
         });
-        return def.resolve();
+        it('checks conditions after promise is rejected', function(done) {
+          var def, result;
+          result = 1;
+          def = window.when.defer();
+          expect(function() {
+            return result;
+          }).to.change.when((function() {
+            return def.promise;
+          }), {
+            notify: done
+          });
+          result += 1;
+          return def.reject();
+        });
+        return it('returns error to notify when conditions after promise fail', function(done) {
+          var callCheck, def, result;
+          callCheck = function(arg) {
+            try {
+              arg.should.eql(new Error('expected `result;` to change, but it stayed 1'));
+              return done();
+            } catch (error) {
+              return done(new Error(error));
+            }
+          };
+          result = 1;
+          def = window.when.defer();
+          expect(function() {
+            return result;
+          }).to.change.when((function() {
+            return def.promise;
+          }), {
+            notify: callCheck
+          });
+          return def.resolve();
+        });
       });
     });
     return describe('change', function() {
