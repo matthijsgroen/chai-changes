@@ -3,7 +3,7 @@
   "name": "chai-changes",
   "description": "Change assertions for the Chai assertion library",
   "keywords": [ "test", "assertion", "assert", "testing", "changes", "promises" ],
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/matthijsgroen/chai-changes"
