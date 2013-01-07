@@ -22,10 +22,7 @@
         result = 1;
         return expect(function() {
           return result;
-        }).to.change.when(function() {
-          result += 1;
-          return 'hello';
-        }).and.equal('hello');
+        }).not.to.change.when(function() {}).and.not.be.defined;
       });
       return describe('with promises', function() {
         it('checks conditions after promise resolved', function(done) {

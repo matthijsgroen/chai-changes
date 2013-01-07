@@ -38,7 +38,7 @@
       }
       result = val();
       flag(this, 'object', result);
-      if (result.then != null) {
+      if ((result != null ? result.then : void 0) != null) {
         done = options != null ? options.notify : void 0;
         if (done == null) {
           done = function() {};

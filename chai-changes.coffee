@@ -30,7 +30,7 @@
     result = val()
     flag(this, 'object', result)
 
-    if result.then?
+    if result?.then?
       done = options?.notify
       done ?= ->
       # promise

@@ -11,10 +11,7 @@ describe 'Chai-Changes', ->
 
     it 'changes the object in the assert chain to the callback result', ->
       result = 1
-      expect(-> result).to.change.when ->
-        result += 1
-        'hello'
-      .and.equal 'hello'
+      expect(-> result).not.to.change.when(->).and.not.be.defined
 
     describe 'with promises', ->
 
