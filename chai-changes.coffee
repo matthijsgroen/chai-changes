@@ -29,7 +29,10 @@
     # execute the 'when'
     result = val()
 
-    if result?.then?
+    isPromise = result?.then?
+    isPromise = false if DS?.Model? and result instanceof DS.Model
+
+    if isPromise
       done = options?.notify
       done ?= ->
       # promise
