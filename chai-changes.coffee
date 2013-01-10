@@ -30,6 +30,14 @@
     result = val()
 
     isPromise = result?.then?
+
+    # Ignore Ember Models for now
+    #
+    # v = App.Model.createRecord()
+    # returns a method with an unfulfilled promise
+    # doing a v.set('property', value) return v, thus also the unfulfilled promise
+    # this way test fail if run in asynch mode because of a timeout
+    # and pass in synch mode since the post-conditions don't run
     isPromise = false if DS?.Model? and result instanceof DS.Model
 
     if isPromise
