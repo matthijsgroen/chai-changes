@@ -18,21 +18,26 @@ describe 'Chai-Changes', ->
       it 'checks conditions after promise resolved', (done) ->
         result = 1
         def = window.when.defer()
-        expect(-> result).to.change.when((-> def.promise), notify: done)
+        p = expect(-> result).to.change.when((-> def.promise), notify: done)
+        expect(typeof p.then is 'function').to.be.true
         result += 1
         def.resolve()
 
       it 'checks conditions after promise is rejected', (done) ->
         result = 1
         def = window.when.defer()
-        expect(-> result).to.change.when(-> def.promise).and.notify(done)
+        p = expect(-> result).to.change.when(-> def.promise)
+        expect(typeof p.then is 'function').to.be.true
+        p.notify(done)
         result += 1
         def.reject()
 
       it 'returns a promise about the expectations', (done) ->
         result = 1
         def = window.when.defer()
-        expect(-> result).to.change.when(-> def.promise).be.broken.with('expected `result;` to change, but it stayed 1').notify(done)
+        p = expect(-> result).to.change.when(-> def.promise).be.broken.with('expected `result;` to change, but it stayed 1')
+        expect(typeof p.then is 'function').to.be.true
+        p.notify(done)
 
         def.resolve()
 

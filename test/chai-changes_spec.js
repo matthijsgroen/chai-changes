@@ -28,40 +28,45 @@
       });
       return describe('with promises', function() {
         it('checks conditions after promise resolved', function(done) {
-          var def, result;
+          var def, p, result;
           result = 1;
           def = window.when.defer();
-          expect(function() {
+          p = expect(function() {
             return result;
           }).to.change.when((function() {
             return def.promise;
           }), {
             notify: done
           });
+          expect(typeof p.then === 'function').to.be["true"];
           result += 1;
           return def.resolve();
         });
         it('checks conditions after promise is rejected', function(done) {
-          var def, result;
+          var def, p, result;
           result = 1;
           def = window.when.defer();
-          expect(function() {
+          p = expect(function() {
             return result;
           }).to.change.when(function() {
             return def.promise;
-          }).and.notify(done);
+          });
+          expect(typeof p.then === 'function').to.be["true"];
+          p.notify(done);
           result += 1;
           return def.reject();
         });
         return it('returns a promise about the expectations', function(done) {
-          var def, result;
+          var def, p, result;
           result = 1;
           def = window.when.defer();
-          expect(function() {
+          p = expect(function() {
             return result;
           }).to.change.when(function() {
             return def.promise;
-          }).be.broken["with"]('expected `result;` to change, but it stayed 1').notify(done);
+          }).be.broken["with"]('expected `result;` to change, but it stayed 1');
+          expect(typeof p.then === 'function').to.be["true"];
+          p.notify(done);
           return def.resolve();
         });
       });
