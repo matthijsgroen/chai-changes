@@ -29,7 +29,7 @@
     # execute the 'when'
     result = val()
 
-    isPromise = typeof result.then is 'function'
+    isPromise = (typeof result is 'object') && (typeof result.then is 'function')
 
     # Ignore Ember Models for now
     #
@@ -53,9 +53,10 @@
           throw new Error error
       newPromise = result.then promiseCallback, promiseCallback
 
-      flag(this, 'object', newPromise)
       # add Promise to current Assertion chain. Mocha-as-promised can pick this up
-      @then = newPromise.then
+      @then = newPromise.then if newPromise?.then
+
+      flag(this, 'object', newPromise)
     else
       action.after?(this) for action in definedActions
       flag(this, 'object', result)

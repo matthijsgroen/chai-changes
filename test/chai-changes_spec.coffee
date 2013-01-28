@@ -58,6 +58,7 @@ describe 'Chai-Changes', ->
           expect(-> result).not.to.change.when -> result += 2
         ).to.throw 'expected `result;` not to change, but it changed from 1 to 3'
         expect(-> result).to.not.change.when -> 1 + 3
+        expect(-> result).to.not.change.when -> undefined
 
     describe 'by delta', ->
 
