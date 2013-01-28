@@ -1,7 +1,4 @@
 
-expect = require("chai").expect
-`when = require("when");`
-
 describe 'Chai-Changes', ->
 
   describe 'when', ->
