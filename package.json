@@ -14,11 +14,14 @@
   "main": "./chai-changes",
   "devDependencies": {
     "chai-as-promised": ">= 3.2.3",
+    "coffee-script": ">= 1.4.0",
     "chai": ">= 1.0.0",
+    "when": "*",
     "mocha": ">= 1.0.0"
   },
   "scripts": {
-    "test": "./test.sh"
+    "test": "mocha",
+    "test-browser": "./test.sh"
   },
   "licenses": [
     {

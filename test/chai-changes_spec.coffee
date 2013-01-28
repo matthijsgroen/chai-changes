@@ -1,5 +1,6 @@
-should = chai.should()
-expect = chai.expect
+
+expect = require("chai").expect
+`when = require("when");`
 
 describe 'Chai-Changes', ->
 
@@ -17,7 +18,7 @@ describe 'Chai-Changes', ->
 
       it 'checks conditions after promise resolved', (done) ->
         result = 1
-        def = window.when.defer()
+        def = `when`.defer()
         p = expect(-> result).to.change.when((-> def.promise), notify: done)
         expect(typeof p.then is 'function').to.be.true
         result += 1
@@ -25,7 +26,7 @@ describe 'Chai-Changes', ->
 
       it 'checks conditions after promise is rejected', (done) ->
         result = 1
-        def = window.when.defer()
+        def = `when`.defer()
         p = expect(-> result).to.change.when(-> def.promise)
         expect(typeof p.then is 'function').to.be.true
         p.notify(done)
@@ -34,7 +35,7 @@ describe 'Chai-Changes', ->
 
       it 'returns a promise about the expectations', (done) ->
         result = 1
-        def = window.when.defer()
+        def = `when`.defer()
         p = expect(-> result).to.change.when(-> def.promise).be.broken.with('expected `result;` to change, but it stayed 1')
         expect(typeof p.then is 'function').to.be.true
         p.notify(done)
