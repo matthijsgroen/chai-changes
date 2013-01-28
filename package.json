@@ -20,8 +20,7 @@
     "mocha": ">= 1.0.0"
   },
   "scripts": {
-    "test": "mocha",
-    "test-browser": "./test.sh"
+    "test": "mocha"
   },
   "licenses": [
     {
