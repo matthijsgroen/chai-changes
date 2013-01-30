@@ -37,15 +37,33 @@ pre-conditions, then it will execute the provided callback. And after
 the callback it will assert the post-conditions. It will change the
 object in the assertion chain to the result of the callback.
 
+#### Promises
+
 When the callback returns a promise, the post-conditions are executed
 when the promise is fulfilled.
 
-Since the 'object' in the assertion chain is changed after the when, you
-can chain [chai-as-promised](https://github.com/domenic/chai-as-promised) matchers too, like:
-`(-> result).should.change.to(4).when(-> object.methodThatReturnsPromise()).and.notify(done)`
+The `when` statement will return an assertion promise when the result of
+the `when` block is a promise. To use in mocha, you can specify an
+`notify` key to trigger `done()`
 
-This makes this mechanism also compatible with
-[mocha-as-promised](https://github.com/domenic/mocha-as-promised)
+```coffeescript
+expect(-> value).to.change.when(
+  -> promise
+  notify: done
+)
+```
+
+if you use
+[mocha-as-promised](https://github.com/domenic/mocha-as-promised), you
+don't need to specify this notify method
+
+an alternative would be:
+
+```coffeescript
+expect(-> value).to.change.when(-> promise).then
+  -> done()
+  (error) -> done(error)
+```
 
 ### `change`
 

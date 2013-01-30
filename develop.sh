@@ -1,4 +1,4 @@
 #!/bin/bash
-coffee -c -o . . && coffee -c -o test/ test/
+coffee -c -o . chai-changes.coffee
 
 

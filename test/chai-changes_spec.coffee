@@ -16,27 +16,35 @@ describe 'Chai-Changes', ->
       it 'checks conditions after promise resolved', (done) ->
         result = 1
         def = `when`.defer()
-        p = expect(-> result).to.change.when((-> def.promise), notify: done)
-        expect(typeof p.then is 'function').to.be.true
+        p = expect(-> result).to.change.when((-> def.promise))
         result += 1
         def.resolve()
+
+        p.should.be.fulfilled.and.notify done
 
       it 'checks conditions after promise is rejected', (done) ->
         result = 1
         def = `when`.defer()
         p = expect(-> result).to.change.when(-> def.promise)
-        expect(typeof p.then is 'function').to.be.true
-        p.notify(done)
         result += 1
         def.reject()
+        p.should.be.fulfilled.and.notify(done)
 
       it 'returns a promise about the expectations', (done) ->
         result = 1
         def = `when`.defer()
-        p = expect(-> result).to.change.when(-> def.promise).be.broken.with('expected `result;` to change, but it stayed 1')
-        expect(typeof p.then is 'function').to.be.true
-        p.notify(done)
+        p = expect(-> result).to.change.when(-> def.promise)
+        p.should.be.broken.with('expected `result;` to change, but it stayed 1').and.notify(done)
+        def.resolve()
 
+      it 'accepts a notify option to trigger done()', (done) ->
+        result = 1
+        def = `when`.defer()
+        expect(-> result).to.change.when(
+          -> def.promise
+          notify: done
+        )
+        result += 1
         def.resolve()
 
   describe 'change', ->
