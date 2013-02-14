@@ -175,3 +175,6 @@ describe 'Chai-Changes', ->
         result = 3
         expect(-> result).to.change.from(3).to(5).by(2).when -> result = 5
 
+      it 'can use increast to and atLeast in one sentence', ->
+        result = -20
+        expect(-> result).to.increase.by.atLeast(20).to(14).when -> result += 34
