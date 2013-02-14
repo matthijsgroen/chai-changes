@@ -117,6 +117,48 @@ describe 'Chai-Changes', ->
           expect(-> result).to.change.from('b').when -> result = 'b'
         ).to.throw 'expected `result;` to change from \'b\', but it did not change'
 
+    describe 'increase', ->
+
+      it 'asserts increase in value', ->
+        result = 0
+        expect(-> result).to.increase.when -> result += 1
+
+        expect(->
+          expect(-> result).to.increase.when -> result
+        ).to.throw 'expected `result;` to increase, but it did not change'
+
+        expect(->
+          expect(-> result).to.increase.when -> result -= 2
+        ).to.throw 'expected `result;` to increase, but it decreased by 2'
+
+      it 'asserts no increase in value when negated', ->
+        result = 0
+        expect(-> result).not.to.increase.when -> result -= 1
+        expect(-> result).not.to.increase.when -> result
+        expect(->
+          expect(-> result).not.to.increase.when -> result += 3
+        ).to.throw 'expected `result;` not to increase, but it increased by 3'
+
+    describe 'decrease', ->
+
+      it 'asserts decrease in value', ->
+        result = 0
+        expect(-> result).to.decrease.when -> result -= 1
+        expect(->
+          expect(-> result).to.decrease.when -> result
+        ).to.throw 'expected `result;` to decrease, but it did not change'
+        expect(->
+          expect(-> result).to.decrease.when -> result += 4
+        ).to.throw 'expected `result;` to decrease, but it increased by 4'
+
+      it 'asserts no increase in value when negated', ->
+        result = 0
+        expect(-> result).not.to.decrease.when -> result += 1
+        expect(-> result).not.to.decrease.when -> result
+        expect(->
+          expect(-> result).not.to.decrease.when -> result -= 3
+        ).to.throw 'expected `result;` not to decrease, but it decreased by 3'
+
     describe 'mix and match', ->
 
       it 'can use from to and by in one sentence', ->

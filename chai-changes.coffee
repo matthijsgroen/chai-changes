@@ -14,43 +14,75 @@
   inspect = utils.inspect
   flag = utils.flag
 
-  ###
+  # # Change Matchers
   #
-  # Changes Matchers
+  # All matchers are build around a before and after assertion to verify the change
+  # at a specific moment. The structure of each assertion is as follows:
   #
-  ###
+  #     expect(methodThatWillBeInvokedAtStartAndEnd).to.change.when ->
+  #       code that will result in a change when method is rerun
+  #
+  # The `when` statement will run a series of beforeAssertions, then execute
+  # the callback of the `when` argument, wait for that execution to finish if it
+  # is a promise, and then execute all afterAssertions.
+  #
+  # the following keywords will register before and after assertions for `when`:
+  #
+  # * by (verify a delta)
+  # * to (verify that a change resulted in provided end value)
+  # * from (verify that a change started at provided start value)
+  # * change (verify if result changed at all)
+  #
+  # Other libraries, such as "chai-backbone" register their own matchers to
+  # this before and end assertion chain using `when`
+  #
 
   chai.Assertion.addMethod 'when', (val, options = {}) ->
     definedActions = flag(this, 'whenActions') || []
     object = flag(this, 'object')
     flag(this, 'whenObject', object)
 
+    # Execute all before assertions
     action.before?(this) for action in definedActions
+
     # execute the 'when'
     result = val()
 
     isPromise = (typeof result is 'object') && (typeof result.then is 'function')
-
     if isPromise
+      # if the result is a promise, wait till it reached the end state (rejection/fulfillment)
+      # before running the after assertions.
+      #
+      # This will make the `when` method into a promise as well,
+      # that will be fulfilled when all assertions pass, and reject if an assertion
+      # fails.
+      #
+      # You can pass in a `{ notify: done }` option hash to wire this
+      # async behaviour to your test runner. (e.g. mocha)
+      #
+      # Because the `when` method will return a promise now, this mechanism
+      # works greate with "mocha-as-promised"
+      #
       done = options?.notify
       done ?= ->
       # promise
       promiseCallback = =>
         try
+          # Run the after assertions if promise is fulfilled or rejected
           action.after?(this) for action in definedActions
           done()
         catch error
-          done new Error error
-          throw new Error error
+          # notify `done` of the error and reraise to reject the promise
+          done error
+          throw error
       newPromise = result.then promiseCallback, promiseCallback
 
       # add Promise to current Assertion chain. Mocha-as-promised can pick this up
       return newPromise
     else
+      # Run all after assertions for the synchronous code.
       action.after?(this) for action in definedActions
-      flag(this, 'object', result)
-    # reset negate state for future chaining
-    flag(this, 'negate', false)
+
     this
 
   noChangeAssert = (context) ->
@@ -157,6 +189,75 @@
         startValue = flag(context, 'whenObject')()
         flag(context, 'changeStart', startValue)
       after: noChangeAssert
+    flag(this, 'whenActions', definedActions)
+
+  # # Increase
+  #
+  # Assert increase in value. the value must be a numeric
+  #
+  chai.Assertion.addProperty 'increase', ->
+    definedActions = flag(this, 'whenActions') || []
+    # Add a around filter to the when actions
+    definedActions.push
+      negate: flag(this, 'negate')
+
+      # set up the callback to trigger
+      before: (context) ->
+        startValue = flag(context, 'whenObject')()
+        flag(context, 'increaseStart', startValue)
+
+      after: (context) ->
+        object = flag(context, 'whenObject')
+        endValue = object()
+        startValue = flag(context, 'increaseStart')
+
+        negate = flag(context, 'negate')
+        flag(context, 'negate', @negate)
+
+        unless negate
+          context.assert (startValue != endValue),
+            "expected `#{formatFunction object}` to increase, but it did not change"
+            "not supported"
+
+        context.assert (startValue < endValue),
+          "expected `#{formatFunction object}` to increase, but it decreased by #{startValue - endValue}",
+          "expected `#{formatFunction object}` not to increase, but it increased by #{endValue - startValue}"
+        flag(context, 'negate', negate)
+
+    flag(this, 'whenActions', definedActions)
+
+  # # Decrease
+  #
+  # Assert decrease in value. the value must be a numeric
+  #
+  chai.Assertion.addProperty 'decrease', ->
+    definedActions = flag(this, 'whenActions') || []
+    # Add a around filter to the when actions
+    definedActions.push
+      negate: flag(this, 'negate')
+
+      # set up the callback to trigger
+      before: (context) ->
+        startValue = flag(context, 'whenObject')()
+        flag(context, 'decreaseStart', startValue)
+
+      after: (context) ->
+        object = flag(context, 'whenObject')
+        endValue = object()
+        startValue = flag(context, 'decreaseStart')
+
+        negate = flag(context, 'negate')
+        flag(context, 'negate', @negate)
+
+        unless negate
+          context.assert (startValue != endValue),
+            "expected `#{formatFunction object}` to decrease, but it did not change"
+            "not supported"
+
+        context.assert (startValue > endValue),
+          "expected `#{formatFunction object}` to decrease, but it increased by #{endValue - startValue}",
+          "expected `#{formatFunction object}` not to decrease, but it decreased by #{startValue - endValue}"
+        flag(context, 'negate', negate)
 
     flag(this, 'whenActions', definedActions)
 

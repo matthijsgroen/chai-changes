@@ -110,6 +110,28 @@ result = ['a', 'b']
 (-> result).should.change.from(['a', 'b']).to(['a', 'c']).when -> result = ['a', 'c']
 ```
 
+### `increase`
+
+Assert if the value increases when an action is performed
+
+```coffeescript
+result = 0
+expect(-> result).to.increase.when -> result += 1
+expect(-> result).not.to.increase.when -> result
+expect(-> result).not.to.increase.when -> result -= 1
+```
+
+### `decrease`
+
+Assert if the value decreases when an action is performed
+
+```coffeescript
+result = 0
+expect(-> result).to.decrease.when -> result -= 1
+expect(-> result).not.to.decrease.when -> result
+expect(-> result).not.to.decrease.when -> result += 1
+```
+
 ## Installation and Setup
 
 ### Node
