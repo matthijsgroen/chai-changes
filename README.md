@@ -132,6 +132,16 @@ expect(-> result).not.to.decrease.when -> result
 expect(-> result).not.to.decrease.when -> result += 1
 ```
 
+### `atLeast(amount)`
+
+Assert if the value has a minimal change of 'amount'
+
+```coffeescript
+result = 0
+expect(-> result).to.change.by.atLeast(4).when -> result += 5
+expect(-> result).to.change.by.atLeast(4).when -> result -= 10
+```
+
 ## Installation and Setup
 
 ### Node

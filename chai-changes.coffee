@@ -261,6 +261,40 @@
 
     flag(this, 'whenActions', definedActions)
 
+  # # atLeast
+  #
+  # Assert minimal change in value
+  #
+  byAtLeast = (amount) ->
+    definedActions = flag(this, 'whenActions') || []
+    # Add a around filter to the when actions
+    definedActions.push
+      negate: flag(this, 'negate')
+
+      # set up the callback to trigger
+      before: (context) ->
+        startValue = flag(context, 'whenObject')()
+        flag(context, 'atLeastStart', startValue)
+
+      after: (context) ->
+        object = flag(context, 'whenObject')
+        endValue = object()
+        startValue = flag(context, 'atLeastStart')
+
+        negate = flag(context, 'negate')
+        flag(context, 'negate', @negate)
+
+        difference = Math.abs(endValue - startValue)
+
+        context.assert (difference >= amount),
+          "expected `#{formatFunction object}` to change by at least #{amount}, but changed by #{difference}"
+          "not supported"
+        flag(context, 'negate', negate)
+
+    flag(this, 'whenActions', definedActions)
+
+  chai.Assertion.addChainableMethod 'atLeast', byAtLeast, -> this
+
   formatFunction = (func) ->
     func.toString().replace(/^\s*function \(\) {\s*/, '').replace(/\s+}$/, '').replace(/\s*return\s*/, '')
 

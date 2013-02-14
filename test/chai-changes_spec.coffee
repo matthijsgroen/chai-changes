@@ -159,6 +159,16 @@ describe 'Chai-Changes', ->
           expect(-> result).not.to.decrease.when -> result -= 3
         ).to.throw 'expected `result;` not to decrease, but it decreased by 3'
 
+    describe 'atLeast', ->
+
+      it 'asserts minimal change in value', ->
+        result = 0
+        expect(-> result).to.change.by.atLeast(3).when -> result -= 3
+        expect(-> result).to.change.by.atLeast(5).when -> result += 5
+        expect(->
+          expect(-> result).to.change.by.atLeast(10).when -> result += 4
+        ).to.throw 'expected `result;` to change by at least 10, but changed by 4'
+
     describe 'mix and match', ->
 
       it 'can use from to and by in one sentence', ->
