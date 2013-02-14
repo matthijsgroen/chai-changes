@@ -164,10 +164,20 @@ describe 'Chai-Changes', ->
       it 'asserts minimal change in value', ->
         result = 0
         expect(-> result).to.change.by.atLeast(3).when -> result -= 3
-        expect(-> result).to.change.by.atLeast(5).when -> result += 5
+        expect(-> result).to.change.by.atLeast(5).when -> result += 7
         expect(->
           expect(-> result).to.change.by.atLeast(10).when -> result += 4
         ).to.throw 'expected `result;` to change by at least 10, but changed by 4'
+
+    describe 'atMost', ->
+
+      it 'asserts maximum change in value', ->
+        result = 0
+        expect(-> result).to.change.by.atMost(3).when -> result -= 3
+        expect(-> result).to.change.by.atMost(5).when -> result += 4
+        expect(->
+          expect(-> result).to.change.by.atMost(2).when -> result += 4
+        ).to.throw 'expected `result;` to change by at most 2, but changed by 4'
 
     describe 'mix and match', ->
 
@@ -178,3 +188,4 @@ describe 'Chai-Changes', ->
       it 'can use increast to and atLeast in one sentence', ->
         result = -20
         expect(-> result).to.increase.by.atLeast(20).to(14).when -> result += 34
+

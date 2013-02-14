@@ -295,6 +295,40 @@
 
   chai.Assertion.addChainableMethod 'atLeast', byAtLeast, -> this
 
+  # # atMost
+  #
+  # Assert maximum change in value
+  #
+  byAtMost = (amount) ->
+    definedActions = flag(this, 'whenActions') || []
+    # Add a around filter to the when actions
+    definedActions.push
+      negate: flag(this, 'negate')
+
+      # set up the callback to trigger
+      before: (context) ->
+        startValue = flag(context, 'whenObject')()
+        flag(context, 'atMostStart', startValue)
+
+      after: (context) ->
+        object = flag(context, 'whenObject')
+        endValue = object()
+        startValue = flag(context, 'atMostStart')
+
+        negate = flag(context, 'negate')
+        flag(context, 'negate', @negate)
+
+        difference = Math.abs(endValue - startValue)
+
+        context.assert (difference <= amount),
+          "expected `#{formatFunction object}` to change by at most #{amount}, but changed by #{difference}"
+          "not supported"
+        flag(context, 'negate', negate)
+
+    flag(this, 'whenActions', definedActions)
+
+  chai.Assertion.addChainableMethod 'atMost', byAtMost, -> this
+
   formatFunction = (func) ->
     func.toString().replace(/^\s*function \(\) {\s*/, '').replace(/\s+}$/, '').replace(/\s*return\s*/, '')
 

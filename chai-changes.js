@@ -12,7 +12,7 @@
       return chai.use(chaiChanges);
     }
   })(function(chai, utils) {
-    var byAtLeast, changeBy, changeByAssert, changeFrom, changeFromAssert, changeFromBeginAssert, changeTo, changeToAssert, changeToBeginAssert, flag, formatFunction, inspect, noChangeAssert;
+    var byAtLeast, byAtMost, changeBy, changeByAssert, changeFrom, changeFromAssert, changeFromBeginAssert, changeTo, changeToAssert, changeToBeginAssert, flag, formatFunction, inspect, noChangeAssert;
     inspect = utils.inspect;
     flag = utils.flag;
     chai.Assertion.addMethod('when', function(val, options) {
@@ -229,6 +229,33 @@
       return flag(this, 'whenActions', definedActions);
     };
     chai.Assertion.addChainableMethod('atLeast', byAtLeast, function() {
+      return this;
+    });
+    byAtMost = function(amount) {
+      var definedActions;
+      definedActions = flag(this, 'whenActions') || [];
+      definedActions.push({
+        negate: flag(this, 'negate'),
+        before: function(context) {
+          var startValue;
+          startValue = flag(context, 'whenObject')();
+          return flag(context, 'atMostStart', startValue);
+        },
+        after: function(context) {
+          var difference, endValue, negate, object, startValue;
+          object = flag(context, 'whenObject');
+          endValue = object();
+          startValue = flag(context, 'atMostStart');
+          negate = flag(context, 'negate');
+          flag(context, 'negate', this.negate);
+          difference = Math.abs(endValue - startValue);
+          context.assert(difference <= amount, "expected `" + (formatFunction(object)) + "` to change by at most " + amount + ", but changed by " + difference, "not supported");
+          return flag(context, 'negate', negate);
+        }
+      });
+      return flag(this, 'whenActions', definedActions);
+    };
+    chai.Assertion.addChainableMethod('atMost', byAtMost, function() {
       return this;
     });
     formatFunction = function(func) {

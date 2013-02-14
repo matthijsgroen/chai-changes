@@ -142,6 +142,16 @@ expect(-> result).to.change.by.atLeast(4).when -> result += 5
 expect(-> result).to.change.by.atLeast(4).when -> result -= 10
 ```
 
+### `atMost(amount)`
+
+Assert if the value has a maximum change of 'amount'
+
+```coffeescript
+result = 0
+expect(-> result).to.change.by.atMost(7).when -> result += 5
+expect(-> result).to.change.by.atMost(14).when -> result -= 10
+```
+
 ## Installation and Setup
 
 ### Node
