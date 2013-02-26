@@ -122,6 +122,7 @@
     object = flag(context, 'whenObject')
 
     startValue = object()
+    flag(context, 'changeToStart', startValue)
 
     result = !utils.eql(startValue, @expectedEndValue)
     result = !result if negate
@@ -134,8 +135,14 @@
     negate = flag(context, 'negate')
     flag(context, 'negate', @negate)
     object = flag(context, 'whenObject')
+    startValue = flag(context, 'changeToStart')
 
     endValue = object()
+    unless negate
+      changed = !utils.eql(startValue, endValue)
+      context.assert changed,
+        "expected `#{formatFunction object}` to change to #{utils.inspect @expectedEndValue}, but it did not change from #{utils.inspect startValue}",
+        "not supported"
 
     result = utils.eql(endValue, @expectedEndValue)
     context.assert result,

@@ -92,11 +92,17 @@ describe 'Chai-Changes', ->
           expect(-> result).to.change.to(['b']).when -> result = ['c']
         ).to.throw 'expected `result;` to change to [ \'b\' ], but it changed to [ \'c\' ]'
 
-      it 'raises an error if there was no change', ->
+      it 'raises an error if expected end value was already set', ->
         result = 'b'
         expect(->
           expect(-> result).to.change.to('b').when -> result = 'b'
         ).to.throw 'expected `result;` to change to \'b\', but it was already \'b\''
+
+      it 'raises an error if there was no change ', ->
+        result = 'b'
+        expect(->
+          expect(-> result).to.change.to('c').when -> result = 'b'
+        ).to.throw 'expected `result;` to change to \'c\', but it did not change from \'b\''
 
     describe 'from', ->
 
