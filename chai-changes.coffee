@@ -116,13 +116,22 @@
       "expected `#{formatFunction object}` not to change by #{@expectedDelta}, but it did"
     flag(context, 'negate', negate)
 
+  clone = (obj) ->
+    # Implementation inspired from Underscore.js's _.clone
+    return obj unless obj is Object(obj)
+    return obj.slice() if Array.isArray(obj)
+    result = {}
+    for key, value of obj
+      result[key] = value
+    result
+
   changeToBeginAssert = (context) ->
     negate = flag(context, 'negate')
     flag(context, 'negate', @negate)
     object = flag(context, 'whenObject')
 
     startValue = object()
-    flag(context, 'changeToStart', startValue)
+    flag(context, 'changeToStart', clone startValue)
 
     result = !utils.eql(startValue, @expectedEndValue)
     result = !result if negate
