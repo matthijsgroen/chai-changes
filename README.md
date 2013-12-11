@@ -2,6 +2,7 @@ chai-changes
 ============
 
 [![Build Status](https://travis-ci.org/matthijsgroen/chai-changes.png?branch=master)](https://travis-ci.org/matthijsgroen/chai-changes)
+[![NPM Version](https://fury-badge.herokuapp.com/js/chai-changes.png)](http://badge.fury.io/js/chai-changes)
 
 chai-changes is an extension to the [chai](http://chaijs.com/) assertion library that
 provides a set of change-specific assertions.

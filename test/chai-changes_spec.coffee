@@ -91,6 +91,17 @@ describe 'Chai-Changes', ->
         expect(-> result).to.change.to(/qux$/).when -> result = 'bazqux'
         expect(-> result).not.to.change.to(/^foo/).when -> result = 'bazqux'
 
+      it 'can handle object mutations', ->
+        object = {
+          attrs: { key: [] }
+          fetch: ->
+            @attrs.key
+          mutationMethod: ->
+            @attrs.key.push 'foo'
+        }
+        expect(-> object.fetch()).to.change.to(['foo']).when ->
+          object.mutationMethod()
+
       it 'reports the mismatched end value', ->
         result = ['a']
         expect(->
