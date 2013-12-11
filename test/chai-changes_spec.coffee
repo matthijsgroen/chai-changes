@@ -34,7 +34,7 @@ describe 'Chai-Changes', ->
         result = 1
         def = `when`.defer()
         p = expect(-> result).to.change.when(-> def.promise)
-        p.should.be.broken.with('expected `result;` to change, but it stayed 1').and.notify(done)
+        p.should.be.rejectedWith('expected `result;` to change, but it stayed 1').and.notify(done)
         def.resolve()
 
       it 'accepts a notify option to trigger done()', (done) ->

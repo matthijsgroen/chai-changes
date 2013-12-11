@@ -61,7 +61,7 @@
       # async behaviour to your test runner. (e.g. mocha)
       #
       # Because the `when` method will return a promise now, this mechanism
-      # works greate with "mocha-as-promised"
+      # works great with "mocha-as-promised"
       #
       done = options?.notify
       done ?= ->
@@ -78,7 +78,8 @@
       newPromise = result.then promiseCallback, promiseCallback
 
       # add Promise to current Assertion chain. Mocha-as-promised can pick this up
-      return newPromise
+      this.then = newPromise.then.bind(newPromise)
+
     else
       # Run all after assertions for the synchronous code.
       action.after?(this) for action in definedActions
