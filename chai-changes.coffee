@@ -144,7 +144,10 @@
         "expected `#{formatFunction object}` to change to #{utils.inspect @expectedEndValue}, but it did not change from #{utils.inspect startValue}",
         "not supported"
 
-    result = utils.eql(endValue, @expectedEndValue)
+    if @expectedEndValue instanceof RegExp
+      result = @expectedEndValue.test endValue
+    else
+      result = utils.eql(endValue, @expectedEndValue)
     context.assert result,
       "expected `#{formatFunction object}` to change to #{utils.inspect @expectedEndValue}, but it changed to #{utils.inspect endValue}",
       "expected `#{formatFunction object}` not to change to #{utils.inspect @expectedEndValue}, but it did"
@@ -157,7 +160,10 @@
 
     startValue = object()
 
-    result = utils.eql(startValue, @expectedStartValue)
+    if @expectedStartValue instanceof RegExp
+      result = @expectedStartValue.test startValue
+    else
+      result = utils.eql(startValue, @expectedStartValue)
     context.assert result,
       "expected the change of `#{formatFunction object}` to start from #{utils.inspect @expectedStartValue}, but it started from #{utils.inspect startValue}",
       "expected the change of `#{formatFunction object}` not to start from #{utils.inspect @expectedStartValue}, but it did",

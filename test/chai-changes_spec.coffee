@@ -86,6 +86,11 @@ describe 'Chai-Changes', ->
         expect(-> result).to.change.to(['b']).when -> result = ['b']
         expect(-> result).not.to.change.to(['c']).when -> result = ['b']
 
+      it 'accepts regular expressions', ->
+        result = 'foobar'
+        expect(-> result).to.change.to(/qux$/).when -> result = 'bazqux'
+        expect(-> result).not.to.change.to(/^foo/).when -> result = 'bazqux'
+
       it 'reports the mismatched end value', ->
         result = ['a']
         expect(->
@@ -109,7 +114,12 @@ describe 'Chai-Changes', ->
       it 'asserts start values', ->
         result = ['a']
         expect(-> result).to.change.from(['a']).when -> result = ['b']
-        expect(-> result).to.change.not.from(['a']).when -> result = ['c']
+        expect(-> result).to.not.change.from(['a']).when -> result = ['c']
+
+      it 'accepts regular expressions', ->
+        result = 'foobar'
+        expect(-> result).to.change.from(/^foo/).when -> result = 'bazqux'
+        expect(-> result).to.not.change.from(/^bar/).when -> result = 'foobar'
 
       it 'reports the mismatched start value', ->
         result = ['a']
