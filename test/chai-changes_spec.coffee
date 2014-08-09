@@ -20,7 +20,7 @@ describe 'Chai-Changes', ->
         result += 1
         def.resolve()
 
-        p.should.be.fulfilled.and.notify done
+        expect(p).to.be.fulfilled.and.notify done
 
       it 'checks conditions after promise is rejected', (done) ->
         result = 1
@@ -28,13 +28,13 @@ describe 'Chai-Changes', ->
         p = expect(-> result).to.change.when(-> def.promise)
         result += 1
         def.reject()
-        p.should.be.fulfilled.and.notify(done)
+        expect(p).to.be.fulfilled.and.notify(done)
 
       it 'returns a promise about the expectations', (done) ->
         result = 1
         def = `when`.defer()
         p = expect(-> result).to.change.when(-> def.promise)
-        p.should.be.rejectedWith('expected `result;` to change, but it stayed 1').and.notify(done)
+        expect(p).to.be.rejectedWith('expected `result;` to change, but it stayed 1').and.notify(done)
         def.resolve()
 
       it 'accepts a notify option to trigger done()', (done) ->
@@ -76,7 +76,7 @@ describe 'Chai-Changes', ->
       it 'reports the contents of the subject method', ->
         result = 1
         expect(->
-          (-> 1 + 3; result).should.change.by(3).when -> result += 2
+          expect((-> 1 + 3; result)).to.change.by(3).when -> result += 2
         ).to.throw 'expected `1 + 3;result;` to change by 3, but it changed by 2'
 
     describe 'to', ->
